@@ -108,8 +108,11 @@ a { color: inherit; text-decoration: none; }
 /* Hero */
 .hero {
   position: relative;
-  padding: 110px 0 80px;
+  padding: 130px 0 100px;
   overflow: hidden;
+  min-height: 560px;
+  display: flex;
+  align-items: center;
 }
 .hero-bg {
   position: absolute;
@@ -120,13 +123,39 @@ a { color: inherit; text-decoration: none; }
     linear-gradient(180deg, #0a0c0b 0%, #101312 100%);
   z-index: 0;
 }
-.hero-inner { position: relative; z-index: 1; }
-.hero-split {
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 40px;
-  align-items: center;
+
+/* Hero background artwork (rhino image full-bleed, anchored right) */
+.hero-art {
+  position: absolute;
+  top: 50%;
+  right: -6%;
+  transform: translateY(-50%);
+  height: 130%;
+  aspect-ratio: 1 / 1;
+  z-index: 1;
+  animation: artBreathe 7s ease-in-out infinite;
 }
+.hero-art-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* Shade layer: fade artwork into the dark background so copy stays readable */
+.hero-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(90deg, #0a0c0b 0%, #0a0c0b 32%, rgba(10,12,11,0.82) 48%, rgba(10,12,11,0.25) 68%, rgba(10,12,11,0.15) 100%),
+    linear-gradient(180deg, rgba(10,12,11,0.55) 0%, transparent 25%, transparent 75%, rgba(10,12,11,0.75) 100%);
+}
+@keyframes artBreathe {
+  0%, 100% { transform: translateY(-50%) scale(1); }
+  50% { transform: translateY(-50%) scale(1.02); }
+}
+
+.hero-inner { position: relative; z-index: 3; width: 100%; }
 .hero-copy { max-width: 620px; }
 .eyebrow {
   text-transform: uppercase;
@@ -149,17 +178,7 @@ a { color: inherit; text-decoration: none; }
 .hero-stats strong { font-size: 1.6rem; color: var(--green); }
 .hero-stats span { color: var(--text-dim); font-size: 0.85rem; }
 
-/* Hero visual — glowing rhino badge */
-.hero-visual { display: flex; justify-content: center; }
-.rhino-badge {
-  position: relative;
-  width: min(420px, 100%);
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  overflow: hidden;
-  animation: badgePulse 3.6s ease-in-out infinite, badgeBreathe 6s ease-in-out infinite;
-}
-.rhino-badge-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Eye glow + lightning overlays (positioned in % of the square hero art) */
 .eye-glow {
   position: absolute;
   width: 8%; height: 8%;
@@ -184,14 +203,6 @@ a { color: inherit; text-decoration: none; }
 .bolt-left { left: 22%; top: 30%; transform: rotate(-18deg); animation-delay: .6s; }
 .bolt-right { left: 66%; top: 30%; transform: rotate(18deg) scaleX(-1); animation-delay: 2.4s; }
 
-@keyframes badgePulse {
-  0%, 100% { box-shadow: 0 0 60px 10px rgba(22,163,74,0.35), 0 0 130px 34px rgba(22,163,74,0.14); }
-  50% { box-shadow: 0 0 90px 20px rgba(22,163,74,0.55), 0 0 170px 55px rgba(22,163,74,0.24); }
-}
-@keyframes badgeBreathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.015); }
-}
 @keyframes eyeFlicker {
   0%, 100% { opacity: 0.85; }
   4% { opacity: 0.25; }
@@ -211,7 +222,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .rhino-badge, .eye-glow, .bolt { animation: none !important; }
+  .hero-art, .eye-glow, .bolt { animation: none !important; }
 }
 
 /* Strip */
@@ -404,10 +415,17 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 900px) {
   .card-grid { grid-template-columns: repeat(2, 1fr); }
   .about-inner, .contact-inner { grid-template-columns: 1fr; }
-  .hero-split { grid-template-columns: 1fr; }
   .hero-copy { max-width: none; }
-  .hero-visual { order: -1; margin-bottom: 20px; }
-  .rhino-badge { width: min(300px, 80vw); }
+  /* Art becomes a centered dim backdrop behind the copy */
+  .hero-art { right: 50%; transform: translate(50%, -50%); height: 110%; opacity: 0.45; }
+  @keyframes artBreathe {
+    0%, 100% { transform: translate(50%, -50%) scale(1); }
+    50% { transform: translate(50%, -50%) scale(1.02); }
+  }
+  .hero-shade {
+    background:
+      linear-gradient(180deg, rgba(10,12,11,0.75) 0%, rgba(10,12,11,0.55) 45%, rgba(10,12,11,0.85) 100%);
+  }
 }
 
 @media (max-width: 680px) {
@@ -427,10 +445,9 @@ a { color: inherit; text-decoration: none; }
   .nav-toggle { display: flex; }
   .btn-call span { display: none; }
   .card-grid { grid-template-columns: 1fr; }
-  .hero { padding: 90px 0 60px; }
+  .hero { padding: 90px 0 60px; min-height: 480px; }
   .hero-stats { gap: 28px; }
   .footer-inner { flex-direction: column; text-align: left; }
-  .rhino-badge { width: min(240px, 70vw); }
 }
 
 /* ============ Multi-page additions ============ */
