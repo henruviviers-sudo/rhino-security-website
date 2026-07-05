@@ -42,6 +42,11 @@ if (contactForm) {
   });
 }
 
+const heroVideo = document.querySelector('.hero-art-video');
+if (heroVideo && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  heroVideo.pause();
+}
+
 const revealEls = document.querySelectorAll('.reveal');
 if ('IntersectionObserver' in window) {
   const observer = new IntersectionObserver((entries) => {
