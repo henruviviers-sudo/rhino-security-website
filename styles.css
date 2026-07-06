@@ -247,6 +247,7 @@ a { color: inherit; text-decoration: none; }
 
 /* Coverage */
 .coverage { padding: 70px 0; text-align: center; }
+.coverage .section-lead { margin-left: auto; margin-right: auto; margin-bottom: 0; }
 .coverage-tags {
   display: flex;
   justify-content: center;
